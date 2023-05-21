@@ -1,4 +1,10 @@
 {
     "port": 10010,
-    "secret": "ikun"
+    "secret": "ikun",
+    "database":{
+        "host":"10.0.0.200",
+        "user":"team",
+        "password":"admin123",
+        "database":"team"
+    }
 }

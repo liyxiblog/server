@@ -7,8 +7,8 @@ try {
     console.log('检测到首次启动，正在生成配置文件，配置文件已生成，请修改！');
     process.exit(0)
 }
-
 // 读取配置文件
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'))
+
 // 导出配置文件
 export default config
