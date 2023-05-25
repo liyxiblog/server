@@ -5,6 +5,8 @@ import config from './modules/getConfig'
 import loginrouter from './router/login'
 import expressJWT from 'express-jwt'
 import getprojectrouter from './router/project'
+import articlePublicrouter from './router/articlePublic'
+import articlerouter from './router/acticle'
 const app = express()
 
 // 解析post
@@ -25,6 +27,8 @@ app.use(
 // 使用路由
 app.use('/api/public', loginrouter)
 app.use('/api/public', getprojectrouter)
+app.use('/api/public', articlePublicrouter)
+app.use('/api', articlerouter)
 
 // 劫持错误中间件
 app.use((err: any, req: any, res: any, next: any) => {
