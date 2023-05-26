@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "ts-node ./src/app.ts",
-    "dev": "nodemon ./src/app.ts"
+    "dev": "nodemon ./src/app.ts",
+    "createdb":"ts-node ./src/createDatabase.ts"
   },
   "dependencies": {
     "body-parser": "^1.20.2",
