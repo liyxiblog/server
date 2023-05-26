@@ -4,7 +4,9 @@ import {
     getArticleByAid,
     getArticleListByUid,
     getArticleInfo,
-    delArticle
+    delArticle,
+    editActicle,
+    addActicle
 } from './../../modules/database/getArticle'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
@@ -40,14 +42,6 @@ export const getArticleList = async (permission?: number) => {
                 uid: authorinfo.uid,
                 nick: authorinfo.nick
             }
-            // e.created_at = new Date(+new Date(e.created_at) + 8 * 3600 * 1000)
-            //     .toISOString()
-            //     .replace(/T/g, ' ')
-            //     .replace(/\.[\d]{3}Z/, '')
-            // e.updated_at = new Date(+new Date(e.updated_at) + 8 * 3600 * 1000)
-            //     .toISOString()
-            //     .replace(/T/g, ' ')
-            //     .replace(/\.[\d]{3}Z/, '')
             e.created_at = moment(e.created_at).format('MMM D, YYYY')
             e.updated_at = moment(e.updated_at).format('MMM D, YYYY')
             // 判断文章有没有密码
@@ -171,4 +165,31 @@ export const delActicles = async (aid: any, uid: any) => {
         return true
     }
     return false
+}
+
+// 修改文章
+export const editActicles = async (
+    uid: number,
+    aid: number,
+    acticleInfo: any,
+    permission: number
+) => {
+    const res = await editActicle(aid, acticleInfo, uid, permission)
+    if (res == 200) {
+        return 200
+    }
+    return 500
+}
+
+// 添加文章
+export const addActicles = async (
+    acticleInfo: any,
+    uid: number,
+    permission: number
+) => {
+    const res = await addActicle(acticleInfo, uid, permission)
+    if (res == 200) {
+        return 200
+    }
+    return 500
 }

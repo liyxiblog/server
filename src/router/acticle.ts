@@ -3,7 +3,9 @@ import {
     getArticle,
     getArticleListByUids,
     getArticleInfos,
-    delActicles
+    delActicles,
+    editActicles,
+    addActicles
 } from './../modules/method/articleFn'
 import express from 'express'
 import type { Request } from './../types/express'
@@ -122,7 +124,7 @@ router.post('/delActicle', async (req: Request, res) => {
 })
 
 // 修改文章
-router.post('/editActicle', (req, res) => {
+router.post('/editActicle', async (req: Request, res) => {
     // 所有参数都不能为空
     if (
         !req.body ||
@@ -130,16 +132,79 @@ router.post('/editActicle', (req, res) => {
         !req.body.title ||
         !req.body.description ||
         !req.body.content ||
-        !req.body.permission ||
-        !req.body.password
+        !req.body.permission
     ) {
-        return {
-            status: 400,
-            msg: '非法的参数'
+        // 判断权限是否为空
+        if (req.body.permission !== 0) {
+            return res.send({
+                status: 400,
+                msg: '非法的参数'
+            })
         }
     }
 
-    // tudo：做到这儿呢~
+    // 写入数据
+    const data = await editActicles(
+        req.user.uid,
+        req.body.aid,
+        req.body,
+        req.user.permission
+    )
+    if (data == 200) {
+        return res.send({
+            status: 200,
+            msg: '修改文章成功'
+        })
+    }
+    if (data == 500) {
+        return res.send({
+            status: 500,
+            msg: '修改文章数据失败'
+        })
+    }
+    return res.send({
+        status: 500,
+        msg: '未知错误'
+    })
+})
+
+// 新建文章
+router.post('/addActicle', async (req: Request, res) => {
+    // 所有参数都不能为空
+    if (
+        !req.body ||
+        !req.body.title ||
+        !req.body.description ||
+        !req.body.content ||
+        !req.body.permission
+    ) {
+        // 判断权限是否为空
+        if (req.body.permission !== 0) {
+            return res.send({
+                status: 400,
+                msg: '非法的参数'
+            })
+        }
+    }
+
+    // 写入数据
+    const data = await addActicles(req.body, req.user.uid, req.user.permission)
+    if (data == 200) {
+        return res.send({
+            status: 200,
+            msg: '添加文章成功'
+        })
+    }
+    if (data == 500) {
+        return res.send({
+            status: 500,
+            msg: '添加文章失败'
+        })
+    }
+    return res.send({
+        status: 500,
+        msg: '未知错误'
+    })
 })
 
 export default router

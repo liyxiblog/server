@@ -14,10 +14,14 @@ updated_at - 文章最后修改时间
 
 author - 文章作者uid
 
-description- 文章描述
+description - 文章描述
 
 content - 文章正文
 
 permission - 文章查看权限
 
 password - 文章密码（可为空）
+
+
+
+注意：用户等级5级或以上修改文章以及发布文章的操作无需审核
