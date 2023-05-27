@@ -6,5 +6,13 @@
         "user":"team",
         "password":"admin123",
         "database":"team"
+    },
+    "tencentsdk":{
+        "SecretId":"114514",
+        "SecretKey":"1919810",
+        "cos":{
+            "Bucket":"awa-1145141919810",
+            "Region":"ap-myhome"
+        }
     }
 }

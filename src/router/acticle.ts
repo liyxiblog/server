@@ -7,8 +7,11 @@ import {
     editActicles,
     addActicles
 } from './../modules/method/articleFn'
+import cos from './../modules/cos'
 import express from 'express'
 import type { Request } from './../types/express'
+import config from './../modules/getConfig'
+import multer from 'multer'
 const router = express.Router()
 
 // 携带身份用户获取文章接口
@@ -204,6 +207,73 @@ router.post('/addActicle', async (req: Request, res) => {
     return res.send({
         status: 500,
         msg: '未知错误'
+    })
+})
+
+// 配置 multer 中间件
+const upload = multer({
+    storage: multer.memoryStorage() // 使用内存存储引擎
+})
+
+// 上传图片
+router.post('/uploadimg', upload.single('uimgs'), (req: Request, res) => {
+    // 检查文件是否存在
+    if (!req.file) {
+        return res.send({
+            status: 400,
+            msg: '就这？我还没尽兴呢！'
+        })
+    }
+
+    // 获取文件
+    const file = req.file
+
+    // 验证文件类型和大小
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
+    if (!allowedTypes.includes(file.mimetype)) {
+        return res.send({
+            status: 4051,
+            msg: '不行...这样的..唔...不..不可以❤..坏掉了❤'
+        })
+    }
+    // 限制文件大小 太大了装不下呜呜
+    const maxSizeInBytes = 2 * 1024 * 1024
+    if (file.size > maxSizeInBytes) {
+        return res.send({
+            status: 4052,
+            msg: '这..这...他他他....太太太...大...大的...〇〇不可以..嗯~..哈啊啊~~'
+        })
+    }
+
+    // 设置文件名
+    const fileName = `/liyxiblog/${req.user.uid}/${new Date().getTime()}_${
+        file.originalname
+    }`
+
+    // 配置 COS SDK 上传参数
+    const uploadParams = {
+        Bucket: config.tencentsdk.cos.Bucket,
+        Region: config.tencentsdk.cos.Region,
+        Key: fileName,
+        Body: file.buffer
+    }
+
+    // 调用 COS SDK 的 putObject 方法上传文件
+    cos.putObject(uploadParams, (err, data) => {
+        if (err) {
+            console.error(err)
+            res.send({
+                status: 500,
+                msg: '失败了呢~'
+            })
+        } else {
+            res.send({
+                status: 200,
+                msg: '好耶！成功力！',
+                url: `https://alongwblog.alongw.cn${fileName}`,
+                desc: file.originalname
+            })
+        }
     })
 })
 
